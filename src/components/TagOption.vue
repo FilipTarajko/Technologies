@@ -1,10 +1,9 @@
 <template>
-  <div class="ListItem" v-show='filteredTag!="all"? item.tags.includes(filteredTag) : true'>
-    <img :src=getImageSrc(item.imageSrc)>
-    <div class='itemTextDiv'>
-      {{ item.text }}
+  <div :class="[filteredTag == tag.text ? 'currentlySelected' : '', 'ListItem']" @click='changeTag(tag.text)' >
+    <img :src=getImageSrc(tag.imageSrc)>
+    <div class='tagTextDiv'>
+      {{ tag.text }}
     </div>
-    <a :href=item.url></a>
   </div>
 </template>
 
@@ -12,7 +11,7 @@
 export default {
   name: 'ListItem',
   props: {
-    item: Object,
+    tag: Object,
     filteredTag: String
   },
   computed: {
@@ -29,6 +28,11 @@ export default {
           console.log('trying to src.ico')
           return 'https://icons.duckduckgo.com/ip2/'+src+'.ico'
       }
+    },
+    changeTag(tag){
+        console.log('32')
+        this.$emit('changeTag', tag)
+        console.log('34')
     }
   }
 }
@@ -60,14 +64,14 @@ export default {
   border-color: hsl(var(--main-hue), 55%, 50%);
   color: hsl(calc(var(--main-hue) + 120), 70%, 50%);
 }
-.itemTextDiv {
+.tagTextDiv {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
 }
 img {
-  width: 20%;
+  width: 13%;
   float: left;
 }
 a {
@@ -77,5 +81,9 @@ a {
   right: var(--link-margin);
   bottom: var(--link-margin);
   top: var(--link-margin);
+}
+.currentlySelected{
+  background-color: hsl(var(--main-hue), 70%, 70%);
+  border-color: hsl(var(--main-hue), 55%, 50%);
 }
 </style>

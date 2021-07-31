@@ -3,8 +3,11 @@
     <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
     <div id='container'>
       <page-title :site-name=siteName />
-      <div id='list'>
-        <ListItem :item=item v-for='item in listItems' :key='item.id' />
+      <div id='tagList'>
+        <TagOption @changeTag=changeTag :tag=tag :filteredTag=filteredTag v-for='tag in tagOptions' :key='tag.id' />
+      </div>
+      <div id='itemList'>
+        <ListItem :item=item :filteredTag=filteredTag v-for='item in listItems' :key='item.id' />
       </div>
       <!-- <div id='inputDiv'>
         <input type='text' class='inputText' id='itemImageUrlInput' value='icon'>
@@ -17,6 +20,7 @@
 </template>
 
 <script>
+import TagOption from './components/TagOption.vue'
 import ListItem from './components/ListItem.vue'
 import PageTitle from './components/PageTitle.vue'
 import AuthorInfo from './components/AuthorInfo.vue'
@@ -26,61 +30,106 @@ export default {
   components: {
     ListItem,
     PageTitle,
-    AuthorInfo
+    AuthorInfo,
+    TagOption
   },
   data: function(){
-    let unindexed = [
+    let unindexedItems = [
       {
         url: 'https://dev-bpm86-005.ibpmpro.srv:9443/ProcessCenter',
         imageSrc: 'ibm bpm',
-        text: 'Process Center'
+        text: 'Process Center',
+        tags: ['frontend', 'backend']
       }, {
         url: 'https://www.postgresql.org',
         imageSrc: 'www.postgresql.org',
-        text: 'PostgreSQL'
+        text: 'PostgreSQL',
+        tags: ['databases']
       }, {
         url: 'https://www.pgadmin.org',
         imageSrc: 'www.pgadmin.org',
-        text: 'pgAdmin'
+        text: 'pgAdmin',
+        tags: ['databases']
       }, {
         url: 'https://lucene.apache.org',
         imageSrc: 'lucene.apache.org',
-        text: 'Lucene'
+        text: 'Lucene',
+        tags: ['databases']
       }, {
         url: 'https://vuejs.org/',
         imageSrc: 'vuejs.org',
-        text: 'Vue.js'
+        text: 'Vue.js',
+        tags: ['frontend']
       }, {
         url: 'https://en.wikipedia.org/wiki/JavaScript',
         imageSrc: 'javascript',
-        text: 'Javascript'
+        text: 'Javascript',
+        tags: ['frontend', 'backend']
       }, {
         url: 'https://www.w3.org/standards/webdesign/htmlcss#whathtml',
         imageSrc: 'html',
-        text: 'HTML'
+        text: 'HTML',
+        tags: ['frontend']
       }, {
         url: 'https://www.w3.org/standards/webdesign/htmlcss#whatcss',
         imageSrc: 'css',
-        text: 'CSS'
+        text: 'CSS',
+        tags: ['frontend']
       }, {
         url: 'https://hgdb.org/confluence/',
         imageSrc: 'mercury',
-        text: 'Mercury (HgDB)'
+        text: 'Mercury (HgDB)',
+        tags: ['databases']
+      }, {
+        url: 'www.soapui.org',
+        imageSrc: 'www.soapui.org',
+        text: 'SoapUi',
+        tags: ['databases']
       }
     ];
+    let unindexedTags = [
+      {
+        imageSrc: 'all',
+        text: 'all',
+      },
+      {
+        imageSrc: 'frontend',
+        text: 'frontend',
+      },
+      {
+        imageSrc: 'backend',
+        text: 'backend',
+      },
+      {
+        imageSrc: 'databases',
+        text: 'databases',
+      },
+    ]
     let listItems = []
-    for(let element of unindexed){
+    for(let element of unindexedItems){
       let nextObject = {
         index: listItems.length,
         url: element.url,
         imageSrc: element.imageSrc,
-        text: element.text
+        text: element.text,
+        tags: element.tags
       }
       listItems.push(nextObject)
     }
+    let tagOptions = []
+    for(let tag of unindexedTags){
+      let nextTag = {
+        index: tagOptions.length,
+        imageSrc: tag.imageSrc,
+        text: tag.text
+      }
+      tagOptions.push(nextTag)
+    }
     return {
       siteName: 'Technologies',
-      listItems
+      listItems,
+      tagOptions,
+      filteredTag: 'all'
     }
   },
   methods: {
@@ -90,18 +139,10 @@ export default {
           imageSrc: document.getElementById('itemImageUrlInput').value,
           text: document.getElementById('itemNameInput').value
         })
+    },
+    changeTag: function (tag) {
+      this.filteredTag = tag
     }
-  },
-  created() {
-    // for(let i=4; i<10; i++){
-    //   let nextItem = {
-    //     index: i,
-    //     imageSrc: 'logo',
-    //     url: 'http://localhost:8080',
-    //     text: `This is the list item number ${i}`
-    //   }
-    //   this.listItems.push(nextItem)
-    // }
   }
 }
 
@@ -1159,13 +1200,13 @@ body {
   height: 100%;
 }
 
-#list {
+#itemList {
   /* flexbox */
   display: grid;
   grid-auto-rows: auto;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  padding: 5px 10%;
+  padding: 2% 10%;
   
   /* flex */
   /* height: auto;
@@ -1173,6 +1214,15 @@ body {
   flex-wrap: wrap;
   flex-direction: row; */
   /* list w width item */
+}
+
+#tagList {
+  /* flexbox */
+  display: grid;
+  grid-auto-rows: auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  padding: 2% 10%;
 }
 
 #inputDiv{
@@ -1189,21 +1239,29 @@ body {
 }
 
 @media (min-width: 1000px) {
-  #list {
+  #itemList {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     padding-left: 15%;
     padding-right: 15%;
   }
-  #inputDiv{
+  #tagList {
+    padding-left: 15%;
+    padding-right: 15%;
+  }
+  #tagDiv{
     padding-left: 25%;
     padding-right: 25%;
   }
 }
 
 @media (min-width: 1500px) {
-  #list {
+  #itemList {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     /* grid-template-columns: repeat(6, minmax(0, 1fr)); */
+    padding-left: 20%;
+    padding-right: 20%;
+  }
+  #tagList {
     padding-left: 20%;
     padding-right: 20%;
   }
