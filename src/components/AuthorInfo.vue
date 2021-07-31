@@ -86,12 +86,12 @@ a {
 }
 
 #parent{
-  padding: 5% 10%;
+  margin: 5% 10%;
 }
 @media (min-width: 1000px) {
   #parent {
-    padding-left: 25%;
-    padding-right: 25%;
+    margin-left: 25%;
+    margin-right: 25%;
   }
   img {
     width: 6.66%;
@@ -100,8 +100,8 @@ a {
 
 @media (min-width: 1500px) {
   #parent {
-    padding-left: 35%;
-    padding-right: 35%;
+    margin-left: 35%;
+    margin-right: 35%;
   }
   img {
     width: 5%;

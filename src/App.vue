@@ -81,7 +81,7 @@ export default {
         text: 'Mercury (HgDB)',
         tags: ['databases']
       }, {
-        url: 'www.soapui.org',
+        url: 'https://www.soapui.org',
         imageSrc: 'www.soapui.org',
         text: 'SoapUi',
         tags: ['databases']
